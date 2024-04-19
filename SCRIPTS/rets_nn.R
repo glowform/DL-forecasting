@@ -154,16 +154,6 @@ for (i in seq(n_train, n_records, n_test)){
   model %>%
     
     
-    ###CNN LSTM I CONVOLUTED LSTM TUTAJ https://machinelearningmastery.com/how-to-develop-lstm-models-for-time-series-forecasting/
-    # layer_conv_1d(
-    #   filters,
-    #   kernel_size,
-    #   activation = "relu",
-    #   input_shape = input_shape
-    # ) %>%
-    # layer_dropout(rate = dropout_rate) %>%
-    # layer_max_pooling_1d(pool_size = pool_size) %>%
-    
     
   
   layer_lstm(
@@ -187,17 +177,7 @@ for (i in seq(n_train, n_records, n_test)){
       kernel_initializer=initializer,
     ) %>%
     layer_dropout(rate = dropout_rate) %>%
-# 
-#     layer_lstm(
-#       units = 128,
-#       recurrent_activation = "sigmoid",
-#       return_sequences = TRUE,
-#       kernel_regularizer = regularizer_l2(l = l2_reg),
-#       #activity_regularizer=regularizer_l2(0.0001),
-#       #recurrent_dropout = (0.02),
-#       kernel_initializer=initializer,
-#     ) %>%
-#     layer_dropout(rate = dropout_rate) %>%
+
 
 
     layer_lstm(
@@ -211,21 +191,6 @@ for (i in seq(n_train, n_records, n_test)){
       input_shape = input_shape
     ) %>%
     layer_dropout(rate = dropout_rate) %>%
-    
-    # layer_dense(64, activation = 'tanh',
-    #             kernel_regularizer = regularizer_l2(l = l2_reg),
-    #             kernel_initializer=initializer) %>%
-    # layer_dropout(rate = dropout_rate) %>%
-    # layer_dense(32, activation = 'tanh',
-    #             kernel_regularizer = regularizer_l2(l = l2_reg),
-    #             kernel_initializer=initializer )%>%
-    # layer_dropout(rate = dropout_rate) %>%
-    # layer_dense(16, activation = 'tanh',
-    #             kernel_regularizer = regularizer_l2(l = l2_reg),
-    #             kernel_initializer=initializer)%>%
-    # layer_dropout(rate = dropout_rate) %>%
-    
-    #layer_flatten() %>%
     
     #layer_dense(1, activation = "relu")
     layer_dense(1, activation = "linear")
@@ -249,7 +214,7 @@ for (i in seq(n_train, n_records, n_test)){
       validation_split = 0.375,
       epochs = 190,
       verbose = 2,
-      shuffle = FALSE, #org było bez tego
+      shuffle = FALSE, 
       callbacks = list(mc)
     )
   
@@ -382,84 +347,6 @@ rets_pr$signal_long <- signal_l
 
 
 
-
-
-
-#signal <- tail(signal,1000)
-
-# 
-# ##ARMA
-# #read arma forecasts
-# armaf <- arrow::read_feather(here('EXPORTS/arma_nkx.feather'))
-# 
-# tail(armaf)
-# 
-# tail(data)
-# 
-# made(armaf$test, armaf$preds)
-# 
-# signal_ar <- vector()
-# 
-# for (j in 1:nrow(armaf)){
-#   
-#   if(armaf$preds[j] >0.000000) {
-#     signal_ar <- c(signal_ar,1)
-#   } else if (armaf$preds[j]<0.000000){
-#     signal_ar <- c(signal_ar,-1)
-#   } else {
-#     signal_ar <- c(signal_ar,0)
-#   }
-#   
-# }
-# 
-# 
-# 
-# ###PROBABILISTIC
-# probf <- arrow::read_feather(here('EXPORTS/prob_df.feather'))
-# 
-# tail(probf)
-# 
-# tail(data)
-# 
-# made(armaf$test, armaf$preds)
-# 
-# signal_ar <- vector()
-# 
-# probf['0']
-# 
-# for (j in 1:nrow(probf)){
-#   
-#   if(probf['0'][[1]][j] >0.000000) {
-#     signal_ar <- c(signal_ar,1)
-#   } else if (probf['0'][[1]][j]<0.000000){
-#     signal_ar <- c(signal_ar,-1)
-#   } else {
-#     signal_ar <- c(signal_ar,0)
-#   }
-#   
-# }
-# 
-# 
-# #double signal strength (sparować z ar)
-# signal_c <-vector()
-# for (j in 1:length(signal)){
-#   print(signal[j])
-#   print(signal_ar[j])
-#   
-#   if(signal[j] == 1 && signal_ar[j] == 1 ) {
-#     
-#     signal_c[j] <- 1
-#   } else if (signal[j] == -1 && signal_ar[j] == -1){
-#     signal_c[j] <- -1
-#   } else {
-#     signal_c[j] <- 0
-#   }
-#   
-# }
-
-
-
-
 #signal <- rets_pr$signal
 #snp 1d price data
 dt_1d <-
@@ -564,21 +451,6 @@ st %>%
 
 
 
-# saveRDS(eql1,here("EXPORTS/eql_snp_1d.rds"))
-# 
-# tb <- xts2tbl(eql1)
-# 
-# 
-# p <-
-#   tb %>%
-#   select(-starts_with("signal")) %>%
-#   pivot_longer(cols = c(close, eqlLS)) %>%
-#   
-#   ggplot(aes(x = datetime, y = value, col = name)) +
-#   geom_line() +
-#   theme_bw() 
-# 
-# p
 
 
 rets_pr$eql_bh <- eql1$close
@@ -586,10 +458,6 @@ rets_pr$eql_ls <- eql1$eql
 
 rets_pr$eql_lo <- eql2$eql
 
-#dodaje strategie long/short, usunąć trzy poniższe linie
-# rets_pr <- arrow::read_feather(here('EXPORTS/rets_nkx.feather'))
-# rets_pr$signal <- signal
-# rets_pr$eql_ls <- eql1$eql
 
 
 
